@@ -27,16 +27,12 @@ function tripal_transcriptomes_table_create_block_content()
                    field_data_field_unigene_current_archived.field_unigene_current_archived_value AS field_data_field_unigene_current_archived_field_unigene_curr,
                    field_data_field_unigene_organism.field_unigene_organism_value AS field_data_field_unigene_organism_field_unigene_organism_val,
                    'node' AS field_data_field_unigene_current_archived_node_entity_type,
-                   'node' AS field_data_field_unigene_organism_node_entity_type,
-                   O.genus AS organism_genus,
-                   O.species AS organism_species,
-                   O.common_name AS organism_common_name
+                   'node' AS field_data_field_unigene_organism_node_entity_type
             FROM 
             [node] node
             INNER JOIN [chado_analysis] chado_analysis_node ON node.nid = chado_analysis_node.nid
             INNER JOIN [node] node_chado_analysis ON chado_analysis_node.nid = node_chado_analysis.nid
             INNER JOIN [field_data_field_unigene_organism] field_data_field_unigene_organism ON node.nid = field_data_field_unigene_organism.entity_id AND (field_data_field_unigene_organism.entity_type = 'node' AND field_data_field_unigene_organism.deleted = '0')
-            INNER JOIN {organism} AS O ON field_data_field_unigene_organism.field_unigene_organism_value = O.organism_id
             LEFT JOIN [field_data_field_unigene_current_archived] field_data_field_unigene_current_archived ON node.nid = field_data_field_unigene_current_archived.entity_id AND (field_data_field_unigene_current_archived.entity_type = 'node' AND field_data_field_unigene_current_archived.deleted = '0')
             WHERE node.status = '1'";
     $results = chado_query($sql);
