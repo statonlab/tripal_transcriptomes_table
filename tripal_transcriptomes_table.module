@@ -37,7 +37,9 @@ function tripal_transcriptomes_table_create_block_content()
             WHERE node.status = '1'";
     $results = chado_query($sql);
 
-    dpm($results->execute());
+    foreach ($results->fetchField() as $field) {
+        dpm($field);
+    }
 
     return $content;
 }
