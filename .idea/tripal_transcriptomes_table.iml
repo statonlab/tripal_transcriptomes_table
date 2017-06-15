@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="WEB_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$" />
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library">
+      <library name="PHP" type="php">
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/../../../../../includes" />
+          <root url="file://$MODULE_DIR$/../../../../../modules" />
+          <root url="file://$MODULE_DIR$/../../admin_menu" />
+          <root url="file://$MODULE_DIR$/../../bueditor" />
+          <root url="file://$MODULE_DIR$/../../chart" />
+          <root url="file://$MODULE_DIR$/../../coder" />
+          <root url="file://$MODULE_DIR$/../../ctools" />
+          <root url="file://$MODULE_DIR$/../feature_url_manager" />
+          <root url="file://$MODULE_DIR$/../transcript_search_form_abbreviation_to_species" />
+          <root url="file://$MODULE_DIR$/../tripal_analysis_expression" />
+          <root url="file://$MODULE_DIR$/../tripal_analysis_kegg" />
+          <root url="file://$MODULE_DIR$/../tripal_elasticsearch" />
+          <root url="file://$MODULE_DIR$/../tripal_feature_jbrowse" />
+          <root url="file://$MODULE_DIR$/../tripal_jbrowse_link" />
+          <root url="file://$MODULE_DIR$/../tripal_organism_panes" />
+          <root url="file://$MODULE_DIR$/../tripal_search_link" />
+          <root url="file://$MODULE_DIR$/../tripal_ssr" />
+          <root url="file://$MODULE_DIR$/../tripal_ssr_backup_folder" />
+          <root url="file://$MODULE_DIR$/../tripal_transcriptome" />
+          <root url="file://$MODULE_DIR$/../tripal_vis_expression" />
+          <root url="file://$MODULE_DIR$/../../date" />
+          <root url="file://$MODULE_DIR$/../../devel" />
+          <root url="file://$MODULE_DIR$/../../devel_themer" />
+          <root url="file://$MODULE_DIR$/../../drupalforfirebug" />
+          <root url="file://$MODULE_DIR$/../../entity" />
+          <root url="file://$MODULE_DIR$/../../google_chart_tools" />
+          <root url="file://$MODULE_DIR$/../../jquery_plugin" />
+          <root url="file://$MODULE_DIR$/../../jquery_update" />
+          <root url="file://$MODULE_DIR$/../../libraries" />
+          <root url="file://$MODULE_DIR$/../../linkchecker" />
+          <root url="file://$MODULE_DIR$/../../markdown" />
+          <root url="file://$MODULE_DIR$/../../markdowneditor" />
+          <root url="file://$MODULE_DIR$/../../module_filter" />
+          <root url="file://$MODULE_DIR$/../../plotly_plots" />
+          <root url="file://$MODULE_DIR$/../../queue_ui" />
+          <root url="file://$MODULE_DIR$/../../simplehtmldom" />
+          <root url="file://$MODULE_DIR$/../../tripal" />
+          <root url="file://$MODULE_DIR$/../../tripal_analysis_blast" />
+          <root url="file://$MODULE_DIR$/../../tripal_analysis_go" />
+          <root url="file://$MODULE_DIR$/../../tripal_analysis_interpro" />
+          <root url="file://$MODULE_DIR$/../../tripal_analysis_unigene" />
+          <root url="file://$MODULE_DIR$/../../tripal_blast" />
+          <root url="file://$MODULE_DIR$/../../tripal_ssr" />
+          <root url="file://$MODULE_DIR$/../../trpdownload_api" />
+          <root url="file://$MODULE_DIR$/../../trpdownload_api_feature" />
+          <root url="file://$MODULE_DIR$/../../views" />
+          <root url="file://$MODULE_DIR$/../../xautoload" />
+        </CLASSES>
+        <SOURCES>
+          <root url="file://$MODULE_DIR$/../../../../../includes" />
+          <root url="file://$MODULE_DIR$/../../../../../modules" />
+          <root url="file://$MODULE_DIR$/../../admin_menu" />
+          <root url="file://$MODULE_DIR$/../../bueditor" />
+          <root url="file://$MODULE_DIR$/../../chart" />
+          <root url="file://$MODULE_DIR$/../../coder" />
+          <root url="file://$MODULE_DIR$/../../ctools" />
+          <root url="file://$MODULE_DIR$/../feature_url_manager" />
+          <root url="file://$MODULE_DIR$/../transcript_search_form_abbreviation_to_species" />
+          <root url="file://$MODULE_DIR$/../tripal_analysis_expression" />
+          <root url="file://$MODULE_DIR$/../tripal_analysis_kegg" />
+          <root url="file://$MODULE_DIR$/../tripal_elasticsearch" />
+          <root url="file://$MODULE_DIR$/../tripal_feature_jbrowse" />
+          <root url="file://$MODULE_DIR$/../tripal_jbrowse_link" />
+          <root url="file://$MODULE_DIR$/../tripal_organism_panes" />
+          <root url="file://$MODULE_DIR$/../tripal_search_link" />
+          <root url="file://$MODULE_DIR$/../tripal_ssr" />
+          <root url="file://$MODULE_DIR$/../tripal_ssr_backup_folder" />
+          <root url="file://$MODULE_DIR$/../tripal_transcriptome" />
+          <root url="file://$MODULE_DIR$/../tripal_vis_expression" />
+          <root url="file://$MODULE_DIR$/../../date" />
+          <root url="file://$MODULE_DIR$/../../devel" />
+          <root url="file://$MODULE_DIR$/../../devel_themer" />
+          <root url="file://$MODULE_DIR$/../../drupalforfirebug" />
+          <root url="file://$MODULE_DIR$/../../entity" />
+          <root url="file://$MODULE_DIR$/../../google_chart_tools" />
+          <root url="file://$MODULE_DIR$/../../jquery_plugin" />
+          <root url="file://$MODULE_DIR$/../../jquery_update" />
+          <root url="file://$MODULE_DIR$/../../libraries" />
+          <root url="file://$MODULE_DIR$/../../linkchecker" />
+          <root url="file://$MODULE_DIR$/../../markdown" />
+          <root url="file://$MODULE_DIR$/../../markdowneditor" />
+          <root url="file://$MODULE_DIR$/../../module_filter" />
+          <root url="file://$MODULE_DIR$/../../plotly_plots" />
+          <root url="file://$MODULE_DIR$/../../queue_ui" />
+          <root url="file://$MODULE_DIR$/../../simplehtmldom" />
+          <root url="file://$MODULE_DIR$/../../tripal" />
+          <root url="file://$MODULE_DIR$/../../tripal_analysis_blast" />
+          <root url="file://$MODULE_DIR$/../../tripal_analysis_go" />
+          <root url="file://$MODULE_DIR$/../../tripal_analysis_interpro" />
+          <root url="file://$MODULE_DIR$/../../tripal_analysis_unigene" />
+          <root url="file://$MODULE_DIR$/../../tripal_blast" />
+          <root url="file://$MODULE_DIR$/../../tripal_ssr" />
+          <root url="file://$MODULE_DIR$/../../trpdownload_api" />
+          <root url="file://$MODULE_DIR$/../../trpdownload_api_feature" />
+          <root url="file://$MODULE_DIR$/../../views" />
+          <root url="file://$MODULE_DIR$/../../xautoload" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+  </component>
+</module>
