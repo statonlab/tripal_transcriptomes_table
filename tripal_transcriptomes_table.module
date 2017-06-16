@@ -34,7 +34,7 @@ function tripal_transcriptomes_table_generate_query()
                    field_data_field_unigene_current_archived.field_unigene_current_archived_value AS status,
                    chado_analysis_node.analysis_id AS analysis_id,
                    (SELECT value FROM chado.analysisprop WHERE type_id=:analysis_unigene_name AND analysis_id=chado_analysis_node.analysis_id) AS unigene_name,
-                   CAST(((SELECT value FROM chado.analysisprop WHERE type_id=:analysis_unigene_num_contigs AND analysis_id=chado_analysis_node.analysis_id) AS num_contigs) AS int),
+                   (SELECT value FROM chado.analysisprop WHERE type_id=:analysis_unigene_num_contigs AND analysis_id=chado_analysis_node.analysis_id) AS num_contigs,
                    CA.timeexecuted AS date_run,
                    CA.program AS program,
                    CO.species AS species,
@@ -77,7 +77,7 @@ function tripal_transcriptomes_table_get_order()
             return 'program';
             break;
         case 'Transcripts':
-            return 'num_contigs';
+            return 'CAST(num_contigs AS int)';
             break;
         default:
             return 'unigene_name';
