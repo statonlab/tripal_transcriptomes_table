@@ -35,7 +35,9 @@ function tripal_transcriptomes_table_create_block_content()
                    field_data_field_unigene_organism.field_unigene_organism_value AS field_data_field_unigene_organism_field_unigene_organism_val,
                    chado_analysis_node.analysis_id AS analysis_id,
                    (SELECT value FROM chado.analysisprop WHERE type_id=:analysis_unigene_name AND analysis_id=chado_analysis_node.analysis_id) AS unigene_name,
-                   (SELECT value FROM chado.analysisprop WHERE type_id=:analysis_unigene_num_contigs AND analysis_id=chado_analysis_node.analysis_id) AS num_contigs
+                   (SELECT value FROM chado.analysisprop WHERE type_id=:analysis_unigene_num_contigs AND analysis_id=chado_analysis_node.analysis_id) AS num_contigs,
+                   CA.timeexcuted AS date_run,
+                   CA.program AS program
             FROM 
             {node} node
             INNER JOIN {chado_analysis} chado_analysis_node ON node.nid = chado_analysis_node.nid
