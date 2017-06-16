@@ -25,7 +25,7 @@ function tripal_transcriptomes_table_create_block_content()
     $sql = "SELECT cvterm_id FROM {cvterm} AS CCVTERM WHERE CCVTERM.name IN ('analysis_unigene_name', 'analysis_unigene_num_contigs')";
     $cv_results = chado_query($sql);
     $terms = [];
-    while($term = $cv_results->fetchObject()) {
+    while ($term = $cv_results->fetchObject()) {
         $terms[] = $term->cvterm_id;
     }
 
@@ -34,8 +34,10 @@ function tripal_transcriptomes_table_create_block_content()
                    field_data_field_unigene_current_archived.field_unigene_current_archived_value AS field_data_field_unigene_current_archived_field_unigene_curr,
                    field_data_field_unigene_organism.field_unigene_organism_value AS field_data_field_unigene_organism_field_unigene_organism_val,
                    chado_analysis_node.analysis_id AS analysis_id,
-                   (SELECT cvterm_id FROM {cvterm} WHERE name = 'analysis_unigene_name' LIMIT 1) AS unigene_name,
-                   (SELECT cvterm_id FROM {cvterm} WHERE name = 'analysis_unigene_num_contigs' LIMIT 1) AS num_contigs
+                   (SELECT cvterm_id FROM {cvterm} WHERE name = 'analysis_unigene_name' LIMIT 1) AS unigene_name_id,
+                   (SELECT cvterm_id FROM {cvterm} WHERE name = 'analysis_unigene_num_contigs' LIMIT 1) AS num_contigs_id,
+                   (SELECT value FROM {analysisprop} WHERE type_id=unigene_name_id LIMIT 1) AS unigene_name,
+                   (SELECT value FROM {analysisprop} WHERE type_id=num_contigs LIMIT 1) AS num_contigs
             FROM 
             [node] node
             INNER JOIN [chado_analysis] chado_analysis_node ON node.nid = chado_analysis_node.nid
