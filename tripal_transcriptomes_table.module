@@ -30,8 +30,7 @@ function tripal_transcriptomes_table_create_block_content()
     }
 
     $sql = "SELECT
-                   field_data_field_unigene_current_archived.field_unigene_current_archived_value AS field_data_field_unigene_current_archived_field_unigene_curr,
-                   field_data_field_unigene_organism.field_unigene_organism_value AS field_data_field_unigene_organism_field_unigene_organism_val,
+                   field_data_field_unigene_current_archived.field_unigene_current_archived_value AS status,
                    chado_analysis_node.analysis_id AS analysis_id,
                    (SELECT value FROM chado.analysisprop WHERE type_id=:analysis_unigene_name AND analysis_id=chado_analysis_node.analysis_id) AS unigene_name,
                    (SELECT value FROM chado.analysisprop WHERE type_id=:analysis_unigene_num_contigs AND analysis_id=chado_analysis_node.analysis_id) AS num_contigs,
@@ -58,12 +57,29 @@ function tripal_transcriptomes_table_create_block_content()
     $rows = [];
 
     while ($field = $results->fetchObject()) {
-        $analysis_id = chado_get_id_from_nid('analysis', $field->nid);
-        $title = tripal_analysis_get_property($analysis_id, 'analysis_unigene_name')->value;
+        //$analysis_id = chado_get_id_from_nid('analysis', $field->nid);
+        //$title = tripal_analysis_get_property($analysis_id, 'analysis_unigene_name')->value;
         $rows[] = [
-            $title,
+            $field->unigene_name,
+            date('m-d-y', $field->date_run),
+            $field->status,
+            "{$field->genus} {$field->species} ({$field->common_name})",
+            $field->program,
+            $field->num_contigs,
         ];
     }
+
+    $content = theme('table', [
+        'header' => [
+            ['data' => 'Transcriptome', 'field' => 'unigene_name'],
+            ['data' => 'Date Run', 'field' => 'date_run'],
+            ['data' => 'Status', 'field' => 'status'],
+            ['data' => 'Organism', 'field' => 'genus'],
+            ['data' => 'Program', 'field' => 'program'],
+            ['data' => 'Transcripts', 'field' => 'num_contigs'],
+        ],
+        'rows' => $rows,
+    ]);
 
     return $content;
 }
