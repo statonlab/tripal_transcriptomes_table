@@ -48,7 +48,7 @@ function tripal_transcriptomes_table_create_block_content()
     $results = db_query($sql, [
         ':analysis_unigene_num_contigs' => $terms['analysis_unigene_num_contigs'],
         ':analysis_unigene_name' => $terms['analysis_unigene_name'],
-    ])->extend('TableSort');
+    ]);
 
     $rows = [];
 
