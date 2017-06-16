@@ -46,7 +46,7 @@ function tripal_transcriptomes_table_create_block_content()
             INNER JOIN {node} node_chado_analysis ON chado_analysis_node.nid = node_chado_analysis.nid
             INNER JOIN {field_data_field_unigene_organism} field_data_field_unigene_organism ON node.nid = field_data_field_unigene_organism.entity_id AND (field_data_field_unigene_organism.entity_type = 'node' AND field_data_field_unigene_organism.deleted = '0')
             INNER JOIN chado.analysis AS CA ON chado_analysis_node.analysis_id = CA.analysis_id
-            INNER JOIN chado.organism AS CO ON field_data_field_unigene_organism.field_unigene_organism_value=CO.organism_id
+            INNER JOIN chado.organism AS CO ON CAST(field_data_field_unigene_organism.field_unigene_organism_value AS int)=CO.organism_id
             LEFT JOIN {field_data_field_unigene_current_archived} field_data_field_unigene_current_archived ON node.nid = field_data_field_unigene_current_archived.entity_id AND (field_data_field_unigene_current_archived.entity_type = 'node' AND field_data_field_unigene_current_archived.deleted = '0')
             WHERE node.status = '1'";
 
