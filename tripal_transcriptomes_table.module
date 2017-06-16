@@ -77,7 +77,7 @@ function tripal_transcriptomes_table_get_order()
             return 'program';
             break;
         case 'Transcripts':
-            return 'num_contigs::int';
+            return 'num_contigs';
             break;
         default:
             return 'unigene_name';
