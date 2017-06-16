@@ -29,6 +29,9 @@ function tripal_transcriptomes_table_create_block_content()
         $terms[$term->name] = intval($term->cvterm_id);
     }
 
+    dpm($terms);
+    return;
+
     $sql = "SELECT node.title AS node_title,
                    node.nid AS nid,
                    field_data_field_unigene_current_archived.field_unigene_current_archived_value AS field_data_field_unigene_current_archived_field_unigene_curr,
