@@ -56,7 +56,7 @@ function tripal_transcriptomes_table_create_block_content()
         ];
     }*/
 
-    dpm($results);
+    dpm($results->fetchObject());
 
     return $content;
 }
