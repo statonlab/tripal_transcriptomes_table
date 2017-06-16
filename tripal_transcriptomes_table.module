@@ -37,7 +37,7 @@ function tripal_transcriptomes_table_create_block_content()
 
     $rows = [];
 
-    while ($field = $results->fetchField()) {
+    while ($field = $results->fetchObject()) {
         $analysis_id = chado_get_id_from_nid('analysis', $field->nid);
         $title = tripal_analysis_get_property($analysis_id, 'analysis_unigene_name');
         $rows[] = [
