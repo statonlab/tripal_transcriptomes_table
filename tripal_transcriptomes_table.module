@@ -61,7 +61,7 @@ function tripal_transcriptomes_table_create_block_content()
         //$title = tripal_analysis_get_property($analysis_id, 'analysis_unigene_name')->value;
         $rows[] = [
             $field->unigene_name,
-            date('m-d-y', $field->date_run),
+            date('m-d-y', strtotime($field->date_run)),
             $field->status,
             "{$field->genus} {$field->species} ({$field->common_name})",
             $field->program,
