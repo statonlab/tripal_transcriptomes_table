@@ -26,7 +26,7 @@ function tripal_transcriptomes_table_create_block_content()
     $cv_results = chado_query($sql);
     $terms = [];
     while ($term = $cv_results->fetchObject()) {
-        $terms[$term->name] = $term->cvterm_id;
+        $terms[$term->name] = (int)$term->cvterm_id;
     }
 
     $sql = "SELECT node.title AS node_title,
@@ -34,8 +34,8 @@ function tripal_transcriptomes_table_create_block_content()
                    field_data_field_unigene_current_archived.field_unigene_current_archived_value AS field_data_field_unigene_current_archived_field_unigene_curr,
                    field_data_field_unigene_organism.field_unigene_organism_value AS field_data_field_unigene_organism_field_unigene_organism_val,
                    chado_analysis_node.analysis_id AS analysis_id,
-                   (SELECT value FROM {analysisprop} WHERE type_id='{$term['analysis_unigene_name']}' LIMIT 1) AS unigene_name,
-                   (SELECT value FROM {analysisprop} WHERE type_id='{$term['analysis_unigene_num_contigs']}' LIMIT 1) AS num_contigs
+                   (SELECT value FROM {analysisprop} WHERE type_id={$term['analysis_unigene_name']} LIMIT 1) AS unigene_name,
+                   (SELECT value FROM {analysisprop} WHERE type_id={$term['analysis_unigene_num_contigs']} LIMIT 1) AS num_contigs
             FROM 
             [node] node
             INNER JOIN [chado_analysis] chado_analysis_node ON node.nid = chado_analysis_node.nid
