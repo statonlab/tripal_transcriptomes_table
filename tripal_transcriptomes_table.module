@@ -51,7 +51,7 @@ function tripal_transcriptomes_table_generate_query()
             WHERE node.status = '1'
             ORDER BY {$order} {$sort}";
 
-    return $sql;
+    return ['sql' => $sql, 'terms' => $terms];
 }
 
 function tripal_transcriptomes_table_get_order()
@@ -89,9 +89,9 @@ function tripal_transcriptomes_table_create_block_content()
 
     $sql = tripal_transcriptomes_table_generate_query();
 
-    $results = db_query($sql, [
-        ':analysis_unigene_num_contigs' => $terms['analysis_unigene_num_contigs'],
-        ':analysis_unigene_name' => $terms['analysis_unigene_name'],
+    $results = db_query($sql['sql'], [
+        ':analysis_unigene_num_contigs' => $sql['terms']['analysis_unigene_num_contigs'],
+        ':analysis_unigene_name' => $sql['terms']['analysis_unigene_name'],
     ]);
 
     $rows = [];
