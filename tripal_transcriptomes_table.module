@@ -109,7 +109,17 @@ function tripal_transcriptomes_table_create_block_content()
         ];
     }
 
-    $content = theme('table', [
+    $content = "<p>
+                    RNA-Seq datasets for multiple species are available.
+                    MiSeq and HiSeq reads from multiple libraries were  cleaned with 
+                    <a href=\"http://www.usadellab.org/cms/?page=trimmomatic\">Trimmomatic</a>
+                    and assembled by <a href=\"http://trinityrnaseq.sourceforge.net/\">Trinity</a>.
+                    <a href=\"http://weizhong-lab.ucsd.edu/cd-hit/\">CD-hit</a> was used to collapse highly similar
+                    reads into a single sequence. Older transcriptomes were built with
+                    <a href=\" http://www.dnastar.com/t-seqmanpro.aspx\">SeqMan Pro</a>.
+                 </p>";
+
+    $content .= theme('table', [
         'header' => [
             ['data' => 'Transcriptome', 'field' => 'unigene_name'],
             ['data' => 'Date Run', 'field' => 'date_run'],
