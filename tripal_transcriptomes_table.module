@@ -77,7 +77,7 @@ function tripal_transcriptomes_table_get_order()
             return 'program';
             break;
         case 'Transcripts':
-            return '(SELECT value FROM chado.analysisprop WHERE type_id=:analysis_unigene_num_contigs AND analysis_id=chado_analysis_node.analysis_id)';
+            return 'CAST((SELECT value FROM chado.analysisprop WHERE type_id=:analysis_unigene_num_contigs AND analysis_id=chado_analysis_node.analysis_id) AS int)';
             break;
         default:
             return 'unigene_name';
