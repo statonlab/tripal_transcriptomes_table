@@ -25,9 +25,7 @@ function tripal_transcriptomes_table_create_block_content()
     $sql = "SELECT node.title AS node_title,
                    node.nid AS nid,
                    field_data_field_unigene_current_archived.field_unigene_current_archived_value AS field_data_field_unigene_current_archived_field_unigene_curr,
-                   field_data_field_unigene_organism.field_unigene_organism_value AS field_data_field_unigene_organism_field_unigene_organism_val,
-                   'node' AS field_data_field_unigene_current_archived_node_entity_type,
-                   'node' AS field_data_field_unigene_organism_node_entity_type
+                   field_data_field_unigene_organism.field_unigene_organism_value AS field_data_field_unigene_organism_field_unigene_organism_val
             FROM 
             [node] node
             INNER JOIN [chado_analysis] chado_analysis_node ON node.nid = chado_analysis_node.nid
