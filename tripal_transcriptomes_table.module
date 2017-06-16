@@ -34,7 +34,7 @@ function tripal_transcriptomes_table_create_block_content()
                    field_data_field_unigene_current_archived.field_unigene_current_archived_value AS field_data_field_unigene_current_archived_field_unigene_curr,
                    field_data_field_unigene_organism.field_unigene_organism_value AS field_data_field_unigene_organism_field_unigene_organism_val,
                    chado_analysis_node.analysis_id AS analysis_id,
-                   (SELECT * FROM {cvterm} AS CCVTERM WHERE CCVTERM.name IN ('analysis_unigene_name', 'analysis_unigene_num_contigs')) AS (term1, term2)
+                   (SELECT value FROM {cvterm} AS CCVTERM WHERE CCVTERM.name IN ('analysis_unigene_name', 'analysis_unigene_num_contigs')) AS terms
             FROM 
             [node] node
             INNER JOIN [chado_analysis] chado_analysis_node ON node.nid = chado_analysis_node.nid
