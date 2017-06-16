@@ -26,7 +26,7 @@ function tripal_transcriptomes_table_create_block_content()
     $cv_results = chado_query($sql);
     $terms = [];
     while ($term = $cv_results->fetchObject()) {
-        $terms[$term->name] = (int)$term->cvterm_id;
+        $terms[$term->name] = intval($term->cvterm_id);
     }
 
     $sql = "SELECT node.title AS node_title,
