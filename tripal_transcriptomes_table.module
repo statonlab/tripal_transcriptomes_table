@@ -62,7 +62,7 @@ function tripal_transcriptomes_table_get_order()
 
     switch ($_GET['order']) {
         case 'Transcriptome':
-            return 'unigne_name';
+            return 'unigene_name';
             break;
         case 'Date Run':
             return 'date_run';
