@@ -18,16 +18,17 @@ function tripal_transcriptomes_table_block_info()
     return $blocks;
 }
 
-function tripal_transcriptomes_table_create_block_content()
+function tripal_transcriptomes_table_generate_query()
 {
-    $content = '';
-
     $sql = "SELECT cvterm_id, name FROM {cvterm} AS CCVTERM WHERE CCVTERM.name IN ('analysis_unigene_name', 'analysis_unigene_num_contigs')";
     $cv_results = chado_query($sql);
     $terms = [];
     while ($term = $cv_results->fetchObject()) {
         $terms[$term->name] = intval($term->cvterm_id);
     }
+
+    $order = tripal_transcriptomes_table_get_order();
+    $sort = isset($_GET['sort']) && $_GET['sort'] === 'desc' ? 'DESC' : 'ASC';
 
     $sql = "SELECT
                    field_data_field_unigene_current_archived.field_unigene_current_archived_value AS status,
@@ -47,7 +48,46 @@ function tripal_transcriptomes_table_create_block_content()
             INNER JOIN chado.analysis AS CA ON chado_analysis_node.analysis_id = CA.analysis_id
             INNER JOIN chado.organism AS CO ON CAST(field_data_field_unigene_organism.field_unigene_organism_value AS int)=CO.organism_id
             LEFT JOIN {field_data_field_unigene_current_archived} field_data_field_unigene_current_archived ON node.nid = field_data_field_unigene_current_archived.entity_id AND (field_data_field_unigene_current_archived.entity_type = 'node' AND field_data_field_unigene_current_archived.deleted = '0')
-            WHERE node.status = '1'";
+            WHERE node.status = '1'
+            ORDER BY {$order} {$sort}";
+
+    return $sql;
+}
+
+function tripal_transcriptomes_table_get_order()
+{
+    if (! isset($_GET['order'])) {
+        return 'unigene_name';
+    }
+
+    switch ($_GET['order']) {
+        case 'Transcriptome':
+            return 'unigne_name';
+            break;
+        case 'Date Run':
+            return 'date_run';
+            break;
+        case 'Status':
+            return 'status';
+            break;
+        case 'Organism':
+            return 'genus';
+            break;
+        case 'Program':
+            return 'program';
+            break;
+        case 'Transcripts':
+            return 'num_contigs';
+            break;
+        default:
+            return 'unigene_name';
+    }
+}
+
+function tripal_transcriptomes_table_create_block_content()
+{
+
+    $sql = tripal_transcriptomes_table_generate_query();
 
     $results = db_query($sql, [
         ':analysis_unigene_num_contigs' => $terms['analysis_unigene_num_contigs'],
@@ -61,7 +101,7 @@ function tripal_transcriptomes_table_create_block_content()
         //$title = tripal_analysis_get_property($analysis_id, 'analysis_unigene_name')->value;
         $rows[] = [
             $field->unigene_name,
-            date('m-d-y', strtotime($field->date_run)),
+            date('m-d-Y', strtotime($field->date_run)),
             $field->status,
             "{$field->genus} {$field->species} ({$field->common_name})",
             $field->program,
