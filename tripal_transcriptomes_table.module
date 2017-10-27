@@ -33,6 +33,7 @@ function tripal_transcriptomes_table_generate_query()
     $sql = "SELECT
                    field_data_field_unigene_current_archived.field_unigene_current_archived_value AS status,
                    chado_analysis_node.analysis_id AS analysis_id,
+                   node.nid AS nid,
                    (SELECT value FROM chado.analysisprop WHERE type_id=:analysis_unigene_name AND analysis_id=chado_analysis_node.analysis_id) AS unigene_name,
                    (SELECT value FROM chado.analysisprop WHERE type_id=:analysis_unigene_num_contigs AND analysis_id=chado_analysis_node.analysis_id) AS num_contigs,
                    CA.timeexecuted AS date_run,
@@ -100,7 +101,7 @@ function tripal_transcriptomes_table_create_block_content()
         //$analysis_id = chado_get_id_from_nid('analysis', $field->nid);
         //$title = tripal_analysis_get_property($analysis_id, 'analysis_unigene_name')->value;
         $rows[] = [
-            $field->unigene_name,
+            $field->nid ? l($field->unigene_name, 'node/'.$field->nid) : $field->unigene_name,
             date('m-d-Y', strtotime($field->date_run)),
             $field->status,
             "{$field->genus} {$field->species} ({$field->common_name})",

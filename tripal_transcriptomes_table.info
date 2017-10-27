@@ -1,5 +1,5 @@
 name = Tripal Transcriptomes Table
 description = Creates a block with a sortable table of transcriptomes
-core = 7.x-1.x
+core = 7.x
 dependencies[] = tripal_core
 dependencies[] = tripal_organism
