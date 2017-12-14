@@ -47,7 +47,7 @@ function tripal_transcriptomes_table_generate_query() {
             FROM  {" .db_escape_table($table_name) ."} AS AB
             INNER JOIN chado.analysis AS CA ON AB.record_id = CA.analysis_id
             INNER JOIN chado.analysis_organism AS AO ON AO.analysis_id =  CA.analysis_id
-            INNER JOIN chado.organism AS CO ON CO.organism_id = AO.organism_id
+            INNER JOIN chado.organism AS CO ON CO.organism_id = AO.organism_id         
             ";
 
   return ['sql' => $sql, 'terms' => $terms];
@@ -94,14 +94,16 @@ function tripal_transcriptomes_table_create_block_content() {
   $rows = [];
 
   while ($field = $results->fetchObject()) {
-    dpm($field);
-    $rows[] = [
-      $field->entity_id ? l($field->unigene_name, 'bio_data/' . $field->entity_id) : $field->unigene_name,
-      date('m-d-Y', strtotime($field->date_run)),
-      "{$field->genus} {$field->species} ({$field->common_name})",
-      $field->program,
-      $field->num_contigs,
-    ];
+
+    if ($field->unigene_name) {//only add analysis that are unigene
+      $rows[] = [
+        $field->entity_id ? l($field->unigene_name, 'bio_data/' . $field->entity_id) : $field->unigene_name,
+        date('m-d-Y', strtotime($field->date_run)),
+        "{$field->genus} {$field->species} ({$field->common_name})",
+        $field->program,
+        $field->num_contigs,
+      ];
+    }
   }
 
   $content = "<p>
