@@ -53,9 +53,6 @@ function tripal_transcriptomes_table_generate_query() {
             INNER JOIN chado.organism O ON O.organism_id = AO.organism_id
             ORDER BY $order $sort";
 
-  dpm(db_query("SELECT TE.title FROM tripal_entity TE
-                  INNER JOIN $table_name B ON B.entity_id = TE.id")->fetchAll());
-
   return ['sql' => $sql, 'terms' => $terms];
 }
 
