@@ -96,6 +96,8 @@ function tripal_transcriptomes_table_create_block_content() {
     ':analysis_unigene_num_contigs' => $sql['terms']['analysis_unigene_num_contigs'],
   ]);
 
+  dpm($results->fetchAll());
+
   $rows = [];
 
   while ($field = $results->fetchObject()) {
