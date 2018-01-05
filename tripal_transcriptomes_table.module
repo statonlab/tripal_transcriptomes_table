@@ -53,19 +53,8 @@ function tripal_transcriptomes_table_generate_query() {
             INNER JOIN chado.organism O ON O.organism_id = AO.organism_id
             ORDER BY $order $sort";
 
-  //  $sql = "SELECT CA.analysis_id,
-  //            AB.entity_id AS entity_id,
-  //            CA.timeexecuted AS date_run,
-  //            CA.program AS program,
-  //            CO.species AS species,
-  //            CO.genus AS genus,
-  //            CO.common_name AS common_name,
-  //            (SELECT value FROM chado.analysisprop WHERE type_id=:analysis_unigene_name AND analysis_id=AB.record_id) AS unigene_name,
-  //            (SELECT value FROM chado.analysisprop WHERE type_id=:analysis_unigene_num_contigs AND analysis_id=AB.record_id) AS num_contigs
-  //            FROM  {" . db_escape_table($table_name) . "} AS AB
-  //            INNER JOIN chado.analysis AS CA ON AB.record_id = CA.analysis_id
-  //            INNER JOIN chado.analysis_organism AS AO ON AO.analysis_id =  CA.analysis_id
-  //            INNER JOIN chado.organism AS CO ON CO.organism_id = AO.organism_id";
+  dpm($sql);
+  dpm($table_name);
 
   return ['sql' => $sql, 'terms' => $terms];
 }
