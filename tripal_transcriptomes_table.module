@@ -53,6 +53,9 @@ function tripal_transcriptomes_table_generate_query() {
             INNER JOIN chado.organism O ON O.organism_id = AO.organism_id
             ORDER BY $order $sort";
 
+  dpm(db_query("SELECT TE.title FROM tripal_entity TE
+                  INNER JOIN $table_name B ON B.entity_id = TE.id")->fetchAll());
+
   return ['sql' => $sql, 'terms' => $terms];
 }
 
@@ -106,14 +109,14 @@ function tripal_transcriptomes_table_create_block_content() {
   }
 
   $content = "<p>
-                    RNA-Seq datasets for multiple species are available.
-                    MiSeq and HiSeq reads from multiple libraries were  cleaned with 
-                    <a href=\"http://www.usadellab.org/cms/?page=trimmomatic\">Trimmomatic</a>
-                    and assembled by <a href=\"http://trinityrnaseq.sourceforge.net/\">Trinity</a>.
-                    <a href=\"http://weizhong-lab.ucsd.edu/cd-hit/\">CD-hit</a> was used to collapse highly similar
-                    reads into a single sequence. Older transcriptomes were built with
-                    <a href=\" http://www.dnastar.com/t-seqmanpro.aspx\">SeqMan Pro</a>.
-                 </p>";
+                RNA-Seq datasets for multiple species are available.
+                MiSeq and HiSeq reads from multiple libraries were  cleaned with 
+                <a href=\"http://www.usadellab.org/cms/?page=trimmomatic\">Trimmomatic</a>
+                and assembled by <a href=\"http://trinityrnaseq.sourceforge.net/\">Trinity</a>.
+                <a href=\"http://weizhong-lab.ucsd.edu/cd-hit/\">CD-hit</a> was used to collapse highly similar
+                reads into a single sequence. Older transcriptomes were built with
+                <a href=\" http://www.dnastar.com/t-seqmanpro.aspx\">SeqMan Pro</a>.
+             </p>";
 
   $content .= theme('table', [
     'header' => [
