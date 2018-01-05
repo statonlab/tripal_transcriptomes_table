@@ -45,7 +45,7 @@ function tripal_transcriptomes_table_generate_query() {
             O.genus AS genus,
             O.common_name AS common_name,
             TE.title AS unigene_name,
-            (SELECT CAST(NULLIF(value, '') AS integer) FROM chado.analysisprop WHERE type_id=:analysis_unigene_num_contigs AND analysis_id=bundle.record_id) AS num_contigs
+            (SELECT CAST(NULLIF(value, '') AS integer) FROM chado.analysisprop WHERE type_id=:analysis_unigene_num_contigs AND analysis_id=bundle.record_id LIMIT 1) AS num_contigs
             FROM {" . db_escape_table($table_name) . "} bundle
             INNER JOIN tripal_entity TE ON TE.id = bundle.entity_id
             INNER JOIN chado.analysis A ON A.analysis_id = bundle.record_id
