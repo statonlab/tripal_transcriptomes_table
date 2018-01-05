@@ -53,9 +53,6 @@ function tripal_transcriptomes_table_generate_query() {
             INNER JOIN chado.organism O ON O.organism_id = AO.organism_id
             ORDER BY $order $sort";
 
-  dpm($sql);
-  dpm($table_name);
-
   return ['sql' => $sql, 'terms' => $terms];
 }
 
@@ -95,8 +92,6 @@ function tripal_transcriptomes_table_create_block_content() {
   $results = db_query($sql['sql'], [
     ':analysis_unigene_num_contigs' => $sql['terms']['analysis_unigene_num_contigs'],
   ]);
-
-  dpm($results->fetchAll());
 
   $rows = [];
 
