@@ -7,110 +7,106 @@
 /**
  * Implements hook_block_info().
  */
-function tripal_transcriptomes_table_block_info()
-{
-    $blocks = [];
+function tripal_transcriptomes_table_block_info() {
+  $blocks = [];
 
-    $blocks['tripal_transcriptomes_table'] = [
-        'info' => 'Tripal transcriptomes table',
-    ];
+  $blocks['tripal_transcriptomes_table'] = [
+    'info' => 'Tripal transcriptomes table',
+  ];
 
-    return $blocks;
+  return $blocks;
 }
 
-function tripal_transcriptomes_table_generate_query()
-{
-    $sql = "SELECT cvterm_id, name FROM {cvterm} AS CCVTERM WHERE CCVTERM.name IN ('analysis_unigene_name', 'analysis_unigene_num_contigs')";
-    $cv_results = chado_query($sql);
-    $terms = [];
-    while ($term = $cv_results->fetchObject()) {
-        $terms[$term->name] = intval($term->cvterm_id);
-    }
+function tripal_transcriptomes_table_generate_query() {
 
-    $order = tripal_transcriptomes_table_get_order();
-    $sort = isset($_GET['sort']) && $_GET['sort'] === 'desc' ? 'DESC' : 'ASC';
+  //NOTE:  these properties may not be set for new analyses created until the proper field is created or the loader sets these props
 
-    $sql = "SELECT
-                   field_data_field_unigene_current_archived.field_unigene_current_archived_value AS status,
-                   chado_analysis_node.analysis_id AS analysis_id,
-                   node.nid AS nid,
-                   (SELECT value FROM chado.analysisprop WHERE type_id=:analysis_unigene_name AND analysis_id=chado_analysis_node.analysis_id) AS unigene_name,
-                   (SELECT value FROM chado.analysisprop WHERE type_id=:analysis_unigene_num_contigs AND analysis_id=chado_analysis_node.analysis_id) AS num_contigs,
-                   CA.timeexecuted AS date_run,
-                   CA.program AS program,
-                   CO.species AS species,
-                   CO.genus AS genus,
-                   CO.common_name AS common_name
-            FROM 
-            {node} node
-            INNER JOIN {chado_analysis} chado_analysis_node ON node.nid = chado_analysis_node.nid
-            INNER JOIN {node} node_chado_analysis ON chado_analysis_node.nid = node_chado_analysis.nid
-            INNER JOIN {field_data_field_unigene_organism} field_data_field_unigene_organism ON node.nid = field_data_field_unigene_organism.entity_id AND (field_data_field_unigene_organism.entity_type = 'node' AND field_data_field_unigene_organism.deleted = '0')
-            INNER JOIN chado.analysis AS CA ON chado_analysis_node.analysis_id = CA.analysis_id
-            INNER JOIN chado.organism AS CO ON CAST(field_data_field_unigene_organism.field_unigene_organism_value AS int)=CO.organism_id
-            LEFT JOIN {field_data_field_unigene_current_archived} field_data_field_unigene_current_archived ON node.nid = field_data_field_unigene_current_archived.entity_id AND (field_data_field_unigene_current_archived.entity_type = 'node' AND field_data_field_unigene_current_archived.deleted = '0')
-            WHERE node.status = '1'
-            ORDER BY {$order} {$sort}";
+  $sql = "SELECT cvterm_id, name FROM {cvterm} AS CCVTERM WHERE CCVTERM.name IN ('analysis_unigene_name', 'analysis_unigene_num_contigs')";
+  $cv_results = chado_query($sql);
+  $terms = [];
+  while ($term = $cv_results->fetchObject()) {
+    $terms[$term->name] = intval($term->cvterm_id);
+  }
 
-    return ['sql' => $sql, 'terms' => $terms];
+  $order = tripal_transcriptomes_table_get_order();
+  $sort = isset($_GET['sort']) && $_GET['sort'] === 'desc' ? 'DESC' : 'ASC';
+
+   $term = tripal_load_term_entity(array('vocabulary' => 'operation', 'accession' => '2945'));
+    $bundle = tripal_load_bundle_entity(array('term_id' => $term->id));
+    $table_name = "chado_" . $bundle->name;
+
+  $sql = "SELECT CA.analysis_id,
+            AB.entity_id AS entity_id,
+            CA.timeexecuted AS date_run,
+            CA.program AS program,
+            CO.species AS species,
+            CO.genus AS genus,
+            CO.common_name AS common_name,
+            (SELECT value FROM chado.analysisprop WHERE type_id=:analysis_unigene_name AND analysis_id=AB.record_id) AS unigene_name,
+            (SELECT value FROM chado.analysisprop WHERE type_id=:analysis_unigene_num_contigs AND analysis_id=AB.record_id) AS num_contigs   
+            FROM  {" .db_escape_table($table_name) ."} AS AB
+            INNER JOIN chado.analysis AS CA ON AB.record_id = CA.analysis_id
+            INNER JOIN chado.analysis_organism AS AO ON AO.analysis_id =  CA.analysis_id
+            INNER JOIN chado.organism AS CO ON CO.organism_id = AO.organism_id         
+            ";
+
+  return ['sql' => $sql, 'terms' => $terms];
 }
 
-function tripal_transcriptomes_table_get_order()
-{
-    if (! isset($_GET['order'])) {
-        return 'unigene_name';
-    }
+function tripal_transcriptomes_table_get_order() {
+  if (!isset($_GET['order'])) {
+    return 'unigene_name';
+  }
 
-    switch ($_GET['order']) {
-        case 'Transcriptome':
-            return 'unigene_name';
-            break;
-        case 'Date Run':
-            return 'date_run';
-            break;
-        case 'Status':
-            return 'status';
-            break;
-        case 'Organism':
-            return 'genus';
-            break;
-        case 'Program':
-            return 'program';
-            break;
-        case 'Transcripts':
-            return 'num_contigs';
-            break;
-        default:
-            return 'unigene_name';
-    }
+  switch ($_GET['order']) {
+    case 'Transcriptome':
+      return 'unigene_name';
+      break;
+    case 'Date Run':
+      return 'date_run';
+      break;
+    case 'Status':
+      return 'status';
+      break;
+    case 'Organism':
+      return 'genus';
+      break;
+    case 'Program':
+      return 'program';
+      break;
+    case 'Transcripts':
+      return 'num_contigs';
+      break;
+    default:
+      return 'unigene_name';
+  }
 }
 
-function tripal_transcriptomes_table_create_block_content()
-{
+function tripal_transcriptomes_table_create_block_content() {
 
-    $sql = tripal_transcriptomes_table_generate_query();
+  $sql = tripal_transcriptomes_table_generate_query();
 
-    $results = db_query($sql['sql'], [
-        ':analysis_unigene_num_contigs' => $sql['terms']['analysis_unigene_num_contigs'],
-        ':analysis_unigene_name' => $sql['terms']['analysis_unigene_name'],
-    ]);
+  $results = db_query($sql['sql'], [
+    ':analysis_unigene_num_contigs' => $sql['terms']['analysis_unigene_num_contigs'],
+    ':analysis_unigene_name' => $sql['terms']['analysis_unigene_name'],
+  ]);
 
-    $rows = [];
+  $rows = [];
 
-    while ($field = $results->fetchObject()) {
-        //$analysis_id = chado_get_id_from_nid('analysis', $field->nid);
-        //$title = tripal_analysis_get_property($analysis_id, 'analysis_unigene_name')->value;
-        $rows[] = [
-            $field->nid ? l($field->unigene_name, 'node/'.$field->nid) : $field->unigene_name,
-            date('m-d-Y', strtotime($field->date_run)),
-            $field->status,
-            "{$field->genus} {$field->species} ({$field->common_name})",
-            $field->program,
-            $field->num_contigs,
-        ];
+  while ($field = $results->fetchObject()) {
+
+    if ($field->unigene_name) {//only add analysis that are unigene
+      $rows[] = [
+        $field->entity_id ? l($field->unigene_name, 'bio_data/' . $field->entity_id) : $field->unigene_name,
+        date('m-d-Y', strtotime($field->date_run)),
+        "{$field->genus} {$field->species} ({$field->common_name})",
+        $field->program,
+        $field->num_contigs,
+      ];
     }
+  }
 
-    $content = "<p>
+  $content = "<p>
                     RNA-Seq datasets for multiple species are available.
                     MiSeq and HiSeq reads from multiple libraries were  cleaned with 
                     <a href=\"http://www.usadellab.org/cms/?page=trimmomatic\">Trimmomatic</a>
@@ -120,33 +116,31 @@ function tripal_transcriptomes_table_create_block_content()
                     <a href=\" http://www.dnastar.com/t-seqmanpro.aspx\">SeqMan Pro</a>.
                  </p>";
 
-    $content .= theme('table', [
-        'header' => [
-            ['data' => 'Transcriptome', 'field' => 'unigene_name'],
-            ['data' => 'Date Run', 'field' => 'date_run'],
-            ['data' => 'Status', 'field' => 'status'],
-            ['data' => 'Organism', 'field' => 'genus'],
-            ['data' => 'Program', 'field' => 'program'],
-            ['data' => 'Transcripts', 'field' => 'num_contigs'],
-        ],
-        'rows' => $rows,
-    ]);
+  $content .= theme('table', [
+    'header' => [
+      ['data' => 'Transcriptome', 'field' => 'unigene_name'],
+      ['data' => 'Date Run', 'field' => 'date_run'],
+      ['data' => 'Organism', 'field' => 'genus'],
+      ['data' => 'Program', 'field' => 'program'],
+      ['data' => 'Transcripts', 'field' => 'num_contigs'],
+    ],
+    'rows' => $rows,
+  ]);
 
-    return $content;
+  return $content;
 }
 
 /**
  * Implements hook_block_view().
  */
-function tripal_transcriptomes_table_block_view($delta = '')
-{
-    $block = [];
+function tripal_transcriptomes_table_block_view($delta = '') {
+  $block = [];
 
-    switch ($delta) {
-        case 'tripal_transcriptomes_table':
-            $block['content'] = tripal_transcriptomes_table_create_block_content();
-            break;
-    }
+  switch ($delta) {
+    case 'tripal_transcriptomes_table':
+      $block['content'] = tripal_transcriptomes_table_create_block_content();
+      break;
+  }
 
-    return $block;
+  return $block;
 }
