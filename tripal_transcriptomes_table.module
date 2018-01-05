@@ -31,24 +31,41 @@ function tripal_transcriptomes_table_generate_query() {
   $order = tripal_transcriptomes_table_get_order();
   $sort = isset($_GET['sort']) && $_GET['sort'] === 'desc' ? 'DESC' : 'ASC';
 
-   $term = tripal_load_term_entity(array('vocabulary' => 'operation', 'accession' => '2945'));
-    $bundle = tripal_load_bundle_entity(array('term_id' => $term->id));
-    $table_name = "chado_" . $bundle->name;
+  $term = tripal_load_term_entity([
+    'vocabulary' => 'operation',
+    'accession' => '3258',
+  ]);
+  $bundle = tripal_load_bundle_entity(['term_id' => $term->id]);
+  $table_name = "chado_" . $bundle->name;
 
-  $sql = "SELECT CA.analysis_id,
-            AB.entity_id AS entity_id,
-            CA.timeexecuted AS date_run,
-            CA.program AS program,
-            CO.species AS species,
-            CO.genus AS genus,
-            CO.common_name AS common_name,
-            (SELECT value FROM chado.analysisprop WHERE type_id=:analysis_unigene_name AND analysis_id=AB.record_id) AS unigene_name,
-            (SELECT value FROM chado.analysisprop WHERE type_id=:analysis_unigene_num_contigs AND analysis_id=AB.record_id) AS num_contigs   
-            FROM  {" .db_escape_table($table_name) ."} AS AB
-            INNER JOIN chado.analysis AS CA ON AB.record_id = CA.analysis_id
-            INNER JOIN chado.analysis_organism AS AO ON AO.analysis_id =  CA.analysis_id
-            INNER JOIN chado.organism AS CO ON CO.organism_id = AO.organism_id         
-            ";
+  $sql = "SELECT TE.id AS entity_id,
+            A.timeexecuted AS date_run,
+            A.program AS program,
+            O.species AS species,
+            O.genus AS genus,
+            O.common_name AS common_name,
+            TE.title AS unigene_name,
+            (SELECT value FROM chado.analysisprop WHERE type_id=:analysis_unigene_num_contigs AND analysis_id=bundle.record_id) AS num_contigs
+            FROM {" . db_escape_table($table_name) . "} bundle
+            INNER JOIN tripal_entity TE ON TE.id = bundle.entity_id
+            INNER JOIN chado.analysis A ON A.analysis_id = bundle.record_id
+            INNER JOIN chado.analysis_organism AO ON A.analysis_id = AO.analysis_id
+            INNER JOIN chado.organism O ON O.organism_id = AO.organism_id
+            ORDER BY $order $sort";
+
+  //  $sql = "SELECT CA.analysis_id,
+  //            AB.entity_id AS entity_id,
+  //            CA.timeexecuted AS date_run,
+  //            CA.program AS program,
+  //            CO.species AS species,
+  //            CO.genus AS genus,
+  //            CO.common_name AS common_name,
+  //            (SELECT value FROM chado.analysisprop WHERE type_id=:analysis_unigene_name AND analysis_id=AB.record_id) AS unigene_name,
+  //            (SELECT value FROM chado.analysisprop WHERE type_id=:analysis_unigene_num_contigs AND analysis_id=AB.record_id) AS num_contigs
+  //            FROM  {" . db_escape_table($table_name) . "} AS AB
+  //            INNER JOIN chado.analysis AS CA ON AB.record_id = CA.analysis_id
+  //            INNER JOIN chado.analysis_organism AS AO ON AO.analysis_id =  CA.analysis_id
+  //            INNER JOIN chado.organism AS CO ON CO.organism_id = AO.organism_id";
 
   return ['sql' => $sql, 'terms' => $terms];
 }
@@ -88,22 +105,18 @@ function tripal_transcriptomes_table_create_block_content() {
 
   $results = db_query($sql['sql'], [
     ':analysis_unigene_num_contigs' => $sql['terms']['analysis_unigene_num_contigs'],
-    ':analysis_unigene_name' => $sql['terms']['analysis_unigene_name'],
   ]);
 
   $rows = [];
 
   while ($field = $results->fetchObject()) {
-
-    if ($field->unigene_name) {//only add analysis that are unigene
-      $rows[] = [
-        $field->entity_id ? l($field->unigene_name, 'bio_data/' . $field->entity_id) : $field->unigene_name,
-        date('m-d-Y', strtotime($field->date_run)),
-        "{$field->genus} {$field->species} ({$field->common_name})",
-        $field->program,
-        $field->num_contigs,
-      ];
-    }
+    $rows[] = [
+      l($field->unigene_name, 'bio_data/' . $field->entity_id),
+      date('m-d-Y', strtotime($field->date_run)),
+      "{$field->genus} {$field->species} ({$field->common_name})",
+      $field->program,
+      $field->num_contigs ?: 0,
+    ];
   }
 
   $content = "<p>
