@@ -17,9 +17,14 @@ function tripal_transcriptomes_table_block_info() {
   return $blocks;
 }
 
+/**
+ * Generate the SQL to get transcriptomes.
+ *
+ * @return array
+ * @throws \Exception
+ */
 function tripal_transcriptomes_table_generate_query() {
-
-  //NOTE:  these properties may not be set for new analyses created until the proper field is created or the loader sets these props
+  // NOTE:  these properties may not be set for new analyses created until the proper field is created or the loader sets these props
 
   $sql = "SELECT cvterm_id, name FROM {cvterm} AS CCVTERM WHERE CCVTERM.name IN ('analysis_unigene_name', 'analysis_unigene_num_contigs')";
   $cv_results = chado_query($sql);
@@ -44,6 +49,7 @@ function tripal_transcriptomes_table_generate_query() {
             O.species AS species,
             O.genus AS genus,
             O.common_name AS common_name,
+            o.organism_id AS organism_id,
             TE.title AS unigene_name,
             (SELECT CAST(REPLACE(NULLIF(value, ''), ',', '') AS integer) FROM chado.analysisprop WHERE type_id=:analysis_unigene_num_contigs AND analysis_id=bundle.record_id LIMIT 1) AS num_contigs
             FROM {" . db_escape_table($table_name) . "} bundle
@@ -56,6 +62,11 @@ function tripal_transcriptomes_table_generate_query() {
   return ['sql' => $sql, 'terms' => $terms];
 }
 
+/**
+ * Get the sorting order.
+ *
+ * @return string
+ */
 function tripal_transcriptomes_table_get_order() {
   if (!isset($_GET['order'])) {
     return 'unigene_name';
@@ -85,8 +96,13 @@ function tripal_transcriptomes_table_get_order() {
   }
 }
 
+/**
+ * Get the content of the page.
+ *
+ * @return string
+ * @throws \Exception
+ */
 function tripal_transcriptomes_table_create_block_content() {
-
   $sql = tripal_transcriptomes_table_generate_query();
 
   $results = db_query($sql['sql'], [
@@ -96,12 +112,13 @@ function tripal_transcriptomes_table_create_block_content() {
   $rows = [];
 
   while ($field = $results->fetchObject()) {
+    $organism_eid = chado_get_record_entity_by_table('organism', $field->organism_id);
     $rows[] = [
       l($field->unigene_name, 'bio_data/' . $field->entity_id),
-      date('m-d-Y', strtotime($field->date_run)),
-      "{$field->genus} {$field->species} ({$field->common_name})",
+      l("{$field->genus} {$field->species} ({$field->common_name})", 'bio_data/'.$organism_eid),
       $field->program,
       $field->num_contigs ?: 0,
+      date('m-d-Y', strtotime($field->date_run)),
     ];
   }
 
@@ -118,10 +135,10 @@ function tripal_transcriptomes_table_create_block_content() {
   $content .= theme('table', [
     'header' => [
       ['data' => 'Transcriptome', 'field' => 'unigene_name'],
-      ['data' => 'Date Run', 'field' => 'date_run'],
       ['data' => 'Organism', 'field' => 'genus'],
       ['data' => 'Program', 'field' => 'program'],
       ['data' => 'Transcripts', 'field' => 'num_contigs'],
+      ['data' => 'Date Run', 'field' => 'date_run'],
     ],
     'rows' => $rows,
   ]);
@@ -131,6 +148,7 @@ function tripal_transcriptomes_table_create_block_content() {
 
 /**
  * Implements hook_block_view().
+ * @throws \Exception
  */
 function tripal_transcriptomes_table_block_view($delta = '') {
   $block = [];
